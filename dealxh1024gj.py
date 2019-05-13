@@ -66,8 +66,8 @@ class dealxh(object):
         return sumMFMD
     def readFile(self):
         # print(time.ctime())
-        trainOrigin = numpy.loadtxt('muscle1.txt')
-        testOrigin = numpy.loadtxt('muscle2.txt')
+        trainOrigin = numpy.loadtxt('./data/muscle_train.txt')
+        testOrigin = numpy.loadtxt('./data/muscle_test.txt')
         trainData = self.deal(trainOrigin)
         testData = self.deal(testOrigin)
         # print(trainData.shape)

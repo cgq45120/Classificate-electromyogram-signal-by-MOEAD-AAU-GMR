@@ -7,11 +7,10 @@ from mpl_toolkits.mplot3d import Axes3D
 import matplotlib.pyplot as plt
 from sklearn import svm
 
-
-class Moead(object):
+class Moead_AAU(object):
     def __init__(self):
         self.partern = 15  # 相邻种群
-        self.iteration = 100  # 迭代次数
+        self.iteration = 1  # 迭代次数
         self.passageway = 16  # 通道数目
         self.feature = 14  # 特征数目
         self.feature_low = 4
@@ -92,20 +91,21 @@ class Moead(object):
         return y, zmin
 
     def geneticmoead(self, y, zmin, popSon):
-        for i in range(self.iteration):
+        weight = 1/self.weight
+        Gmax = 5
+        normailzation = np.array([self.feature-self.feature_low,self.passageway-self.passageway_low,1,1])
+        for i in range(self.iteration):  # 选取3个邻居进行差分进化，使用切比雪夫分解法得到帕累托最优解
             # update_time = 0
             if i % 10 == 0:
                 print(i)
+            G = int(Gmax / (1 + math.exp(-20 * ((i + 1) / self.iteration - 0.5)))) + 1
             s = [0, 0, 0]
             t = np.zeros((self.sonSize, self.popSize))
             while s[0] == s[1] or s[0] == s[2] or s[1] == s[2]:  # 判断随机3个邻居是否重叠
                 s = [random.randint(0, self.partern - 1) for k in range(3)]
             crossrate = [random.random() for k in range(self.popSize)]
-            index = [random.randint(0, self.popSize-1)
-                     for i in range(self.sonSize)]  # 必定变异位置
-            t = popSon[self.distanceIndex[:, s[0]], :] + self.F * \
-                (popSon[self.distanceIndex[:, s[1]], :] -
-                 popSon[self.distanceIndex[:, s[2]], :])  # 差分进化
+            index = [random.randint(0, self.popSize-1) for i in range(self.sonSize)]  # 必定变异位置
+            t = popSon[self.distanceIndex[:, s[0]], :] + self.F * (popSon[self.distanceIndex[:, s[1]], :] - popSon[self.distanceIndex[:, s[2]], :])  # 差分进化
             for j in range(self.sonSize):
                 for k in range(self.popSize):
                     if crossrate[k] > self.cr and k != index[j]:
@@ -117,12 +117,24 @@ class Moead(object):
             for j in range(self.sonSize):
                 if sum(t[j, 0:self.feature]) >= self.feature_low and sum(t[j, self.feature:self.popSize]) >= self.passageway_low:
                     ynow = self.fitness(t[j, :])
-                    if max(abs(self.weight[j, 0]*(ynow[0]-zmin[0]))/(self.feature-self.feature_low), abs(self.weight[j, 1]*(ynow[1]-zmin[1]))/(self.passageway-self.passageway_low), abs(self.weight[j, 2]*(ynow[2]-zmin[2])), abs(self.weight[j, 3]*(ynow[3]-zmin[3]))) < max(
-                            abs(self.weight[j, 0]*(y[j, 0]-zmin[0]))/(self.feature-self.feature_low), abs(self.weight[j, 1]*(y[j, 1]-zmin[1]))/(self.passageway-self.passageway_low), abs(self.weight[j, 2]*(y[j, 2]-zmin[2])), abs(self.weight[j, 3]*(y[j, 3]-zmin[3]))):
-                        popSon[j, :] = t[j, :]
-                        y[j, :] = ynow
-                        # update_time += 1
-                        # print('{}_time_{}_class_{}'.format(i,j,update_time))
+                    angle = np.dot(weight, (ynow - zmin).T) / (np.linalg.norm(weight, axis=1) * np.linalg.norm((ynow - zmin + 1e-8)))
+                    tag = [k for k in range(self.sonSize)]
+                    angletest = np.c_[angle, tag]  # 将标签加上去
+                    angletest = np.transpose(angletest)
+                    for k in range(self.sonSize - 1):  
+                        for l in range(self.sonSize - j - 1):
+                            if angletest[0, l] < angletest[0, l + 1]:
+                                angletest[0, l], angletest[0, l +
+                                                        1] = angletest[0, l + 1], angletest[0, l]
+                                angletest[1, l], angletest[1, l +
+                                                        1] = angletest[1, l + 1], angletest[1, l]
+                    angleIndex = angletest[1, 0:G]
+                    for l in range(G):
+                        if np.dot(weight[int(angleIndex[l]), :], ((ynow - zmin)/normailzation).T) < np.dot(
+                                weight[int(angleIndex[l]), :], ((y[int(angleIndex[l]), :] - zmin)/normailzation).T):
+                            popSon[int(angleIndex[l]), :] = t[j, :]
+                            y[int(angleIndex[l]), :] = ynow
+                            update_time+=1
             ynow_min = y.min(0)
             if ynow_min[0] < zmin[0]:  # 更新最小值
                 zmin[0] = ynow_min[0]
@@ -133,10 +145,10 @@ class Moead(object):
             if ynow_min[3] < zmin[3]:
                 zmin[3] = ynow_min[3]
             # print(update_time)
-        # out_result = np.sum(popSon, axis=0)/popSon.shape[0]
+        # out_result = np.sum(popSon, axis=0) / popSon.shape[0]
         # out_result_numb = np.unique(popSon, axis=0).shape[0]
-        with open('result_moead'+str(self.feature_low)+'_'+str(self.passageway_low)+'.txt', 'w') as f:
-            for i in range(self.sonSize):
+        with open('result_moeadau'+str(self.feature_low)+'_'+str(self.passageway_low)+'.txt', 'w') as f:
+            for i in range(sonSize):
                 f.write('特征数:'+str(y[i, 0])+' 通道数:'+str(y[i, 1]) +
                         ' 准确率:'+str(1-y[i, 2])+' 准确率标准差:'+str(y[i, 3]))
                 f.write('\n')
@@ -185,8 +197,7 @@ class Moead(object):
         ax.set_ylabel('channal')
         ax.set_zlabel('accuracy')
         plt.show()
-        plt.savefig('moead'+str(self.feature_low)+'_' +
-                    str(self.passageway_low)+'.png', dpi=500)
+        plt.savefig('moead_au'+str(feature_low)+'_' + str(passageway_low)+'.png', dpi=500)
 
     def fitness(self, popSon):  # 计算适应度，返回的分别是特征数、通道数、准确率、方差
         y = []
@@ -233,5 +244,11 @@ class Moead(object):
 
 if __name__ == '__main__':
     print(time.ctime())
-    model = Moead()
+    model = Moead_AAU()
     model.main()
+
+
+
+
+
+
