@@ -134,7 +134,7 @@ class Moead_AAU(object):
                                 weight[int(angleIndex[l]), :], ((y[int(angleIndex[l]), :] - zmin)/normailzation).T):
                             popSon[int(angleIndex[l]), :] = t[j, :]
                             y[int(angleIndex[l]), :] = ynow
-                            update_time+=1
+                            # update_time+=1
             ynow_min = y.min(0)
             if ynow_min[0] < zmin[0]:  # 更新最小值
                 zmin[0] = ynow_min[0]
@@ -148,7 +148,7 @@ class Moead_AAU(object):
         # out_result = np.sum(popSon, axis=0) / popSon.shape[0]
         # out_result_numb = np.unique(popSon, axis=0).shape[0]
         with open('result_moeadau'+str(self.feature_low)+'_'+str(self.passageway_low)+'.txt', 'w') as f:
-            for i in range(sonSize):
+            for i in range(self.sonSize):
                 f.write('特征数:'+str(y[i, 0])+' 通道数:'+str(y[i, 1]) +
                         ' 准确率:'+str(1-y[i, 2])+' 准确率标准差:'+str(y[i, 3]))
                 f.write('\n')
@@ -197,7 +197,7 @@ class Moead_AAU(object):
         ax.set_ylabel('channal')
         ax.set_zlabel('accuracy')
         plt.show()
-        plt.savefig('moead_au'+str(feature_low)+'_' + str(passageway_low)+'.png', dpi=500)
+        plt.savefig('moead_au'+str(self.feature_low)+'_' + str(self.passageway_low)+'.png', dpi=500)
 
     def fitness(self, popSon):  # 计算适应度，返回的分别是特征数、通道数、准确率、方差
         y = []
