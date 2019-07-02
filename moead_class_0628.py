@@ -169,28 +169,45 @@ class Moead_AAU(object):
         self.ploturf(out_save[:,-4:])
     
     def sort_deal(self,y):
-        m,n = y.shape
-        all_sort_number = np.zeros([m,n])
-        for i in range(n):
-            sort_number = np.argsort(y[:,i])
-            sort_first = y[sort_number[0],i]
-            t = 1
-            s = 0
-            for j in sort_number:
-                if sort_first == y[j,i]:
-                    all_sort_number[j,i] = t
-                    s += 1
-                elif sort_first < y[j,i]:
-                    sort_first = y[j,i]
-                    t = t + s
-                    all_sort_number[j,i] = t   
-                    s = 1
-        all_remain_sort_1 = all_sort_number[:,0]*all_sort_number[:,1]*all_sort_number[:,2]*all_sort_number[:,3]
-        all_remain_sort_number = np.argsort(all_remain_sort_1)
+        m = y.shape[0]
+        y_normal = (y-y.min(0))/(y.max(0)-y.min(0))+0.001
+        y_normal_GMR = y_normal[:,0]*y_normal[:,1]*y_normal[:,2]*y_normal[:,3]
+        all_sort_normal_GMR = np.zeros((m,1))
+        distance = np.zeros((m,1))
+        for i in range(m):
+            all_min_normal = (y_normal_GMR[i]>y_normal_GMR).astype('int')
+            all_sort_normal_GMR[i] = np.sum(all_min_normal*(y_normal_GMR[i]-y_normal_GMR))
+            distance[i] = np.sum(np.linalg.norm((y_normal - np.tile(y_normal[i, :], (m, 1))), axis=1))
+        all_remain_sort = all_sort_normal_GMR/distance
+        all_remain_sort_number = np.argsort(all_remain_sort.reshape(m))
         all_sort_return = np.zeros([m,1])
         for i in range(m):
             all_sort_return[all_remain_sort_number[i],0] = i + 1
         return all_sort_return
+
+    # def sort_deal(self,y): # use AR to compute
+    #     m,n = y.shape
+    #     all_sort_number = np.zeros([m,n])
+    #     for i in range(n):
+    #         sort_number = np.argsort(y[:,i])
+    #         sort_first = y[sort_number[0],i]
+    #         t = 1
+    #         s = 0
+    #         for j in sort_number:
+    #             if sort_first == y[j,i]:
+    #                 all_sort_number[j,i] = t
+    #                 s += 1
+    #             elif sort_first < y[j,i]:
+    #                 sort_first = y[j,i]
+    #                 t = t + s
+    #                 all_sort_number[j,i] = t   
+    #                 s = 1
+    #     all_remain_sort_1 = all_sort_number[:,0]*all_sort_number[:,1]*all_sort_number[:,2]*all_sort_number[:,3]
+    #     all_remain_sort_number = np.argsort(all_remain_sort_1)
+    #     all_sort_return = np.zeros([m,1])
+    #     for i in range(m):
+    #         all_sort_return[all_remain_sort_number[i],0] = i + 1
+    #     return all_sort_return
 
     def ploturf(self, y):
         xaxis = np.unique(y[:, 0])
