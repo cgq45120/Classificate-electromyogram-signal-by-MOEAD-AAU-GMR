@@ -226,11 +226,7 @@ if __name__ == '__main__':
     cr = 0.5  # 交叉概率
     row1 = 11  # 生成纬度
     b = dealxh()
-    trainDate1, testDate1 = b.readFile()
-    a = numpy.vstack((trainDate1, testDate1))
-    a = (a - a.min(0))/(a.max(0) - a.min(0))
-    trainDate = a[0:1950, :]
-    testDate = a[1950:1950+975, :]
+    trainDate, testDate = b.readFile()
     trainRow = trainDate.shape[0]
     testRow = testDate.shape[0]
     trainTag = []

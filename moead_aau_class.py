@@ -24,13 +24,9 @@ class Moead_AAU(object):
 
     def loaddata(self):
         model_deal = dealxh()
-        trainDate, testDate = model_deal.readFile()
-        one_hot = np.vstack((trainDate, testDate))
-        one_hot = (one_hot - one_hot.min(0))/(one_hot.max(0) - one_hot.min(0))
-        self.trainDate = one_hot[0:1950, :]
-        self.testDate = one_hot[1950:1950+975, :]
-        self.trainRow = trainDate.shape[0]
-        self.testRow = testDate.shape[0]
+        self.trainDate, self.testDate = model_deal.readFile()
+        self.trainRow = self.trainDate.shape[0]
+        self.testRow = self.testDate.shape[0]
         trainTag = []
         testTag = []
         for i in range(5):  # 动作为5个
