@@ -10,15 +10,25 @@
 
 ## Model<br>
 -------------
+![Illustrations of the acute angle between solutions and corresponding weight vector](https://github.com/cgq45120/Classificate-electromyogram-signal-by-MOEAD-AAU-GMR/blob/master/picture/Illustrations-AU.png)
+
+Compared with MOEA/D, this algorithm changes how to choose which solution is better. solution A is the current solution and aa is the corresponding direction vector,   is the acute angle between solution A and its corresponding direction vector aa, when the weighted Tchebycheff approach is used, which also is the acute angle between vector aa and vector F(x)−Z.
+
+According to the value of acute angle $\theta$(x) ,the smaller value of  ,the closer the solution x to the direction vector aa. Thus, the solution which is close to the direction vector could be selected.
 
 
 
+The framework of proposed MOEA/D-AAU-GMR
 
-
-
-
-![structure](https://github.com/cgq45120/Tianchi-small-demo-solve-big-data-of-purchase-and-redeem-for-YuEbao/blob/master/end_code/picture/structure_of_tianchi_data.png)
+![structure](https://github.com/cgq45120/Classificate-electromyogram-signal-by-MOEAD-AAU-GMR/blob/master/picture/Framework-of-MOEAD-AAU-GMR.png)
 <br>
+![](https://github.com/cgq45120/Classificate-electromyogram-signal-by-MOEAD-AAU-GMR/blob/master/picture/Population-Replacement-of-MOEAD-AAU-GMR.png)
+<br>
+![](https://github.com/cgq45120/Classificate-electromyogram-signal-by-MOEAD-AAU-GMR/blob/master/picture/Update-external-archive-of-MOEAD-AAU-GMR.png)
+<br>
+
+
+
 整个框架分为三部分，分别为遗传算法部分，人员聚类部分和资金预测部分，三部分形成一个进化迭代的整体。<br>
 
 遗传算法部分接受资金预测部分提供的预测损失作为种群的适应度，并且维护一个金融特征缩放比例和聚类参数的基因种群（该种群将被用于对交易人员进行聚类）。通过对种群的不断优化，不断的产生适应度更高的金融特征缩放比例和聚类参数。<br>
