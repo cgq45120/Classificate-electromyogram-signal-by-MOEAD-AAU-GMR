@@ -1,5 +1,5 @@
 import multiprocessing as mp
-from dealxh1024gj import *
+from deal_feature import *
 import numpy
 import random
 import time

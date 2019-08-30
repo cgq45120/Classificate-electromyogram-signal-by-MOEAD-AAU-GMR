@@ -1,17 +1,15 @@
-from dealxh1024gj import *
+from deal_feature import *
 import numpy as np
 import random
 import time
 import math
 from mpl_toolkits.mplot3d import Axes3D
 import matplotlib.pyplot as plt
-import matplotlib
 from sklearn import svm
 from tqdm import tqdm
-import multiprocessing as mp
-# %config InlineBackend.figure_format = 'svg' #高画质图
-# %matplotlib inline
-class Moead_AAU(object):
+
+
+class Moead_AAU_GMR(object):
     def __init__(self):
         self.partern = 15  # 相邻种群
         self.iteration = 100  # 迭代次数
@@ -25,17 +23,6 @@ class Moead_AAU(object):
         self.cr = 0.5  # 交叉概率
         self.row = 11  # 生成纬度
         self.loaddata()
-
-    def main(self,time_data):
-        self.time_data = time_data
-        self.getpartern()  # 生成权重向量
-        popSon = self.getson()
-        y, zmin = self.calculatorZ(popSon)
-        print('begin train '+str(time_data))
-        print(time.ctime())
-        self.geneticmoead(y, zmin, popSon)
-        print('end train '+str(time_data))
-        print(time.ctime())
 
     def loaddata(self):
         model_deal = dealxh()
@@ -104,20 +91,23 @@ class Moead_AAU(object):
     def geneticmoead(self, y, zmin, popSon):
         weight = 1/self.weight
         Gmax = 5
-        normailzation = np.array([self.feature-self.feature_low,self.passageway-self.passageway_low,1,1])
-        out_save = np.hstack((popSon,y))
+        normailzation = np.array(
+            [self.feature-self.feature_low, self.passageway-self.passageway_low, 1, 1])
+        out_save = np.hstack((popSon, y))
         for i in range(self.iteration):  # 选取3个邻居进行差分进化，使用切比雪夫分解法得到帕累托最优解
-        # for i in tqdm(range(self.iteration), total=self.iteration, ncols=70, leave=False, unit='b'):
             if i % 10 == 0:
-                print('the {:2f} time map {:2f}'.format(i,self.time_data))
+                print(i)
             G = int(Gmax / (1 + math.exp(-20 * ((i + 1) / self.iteration - 0.5)))) + 1
             s = [0, 0, 0]
             t = np.zeros((self.sonSize, self.popSize))
             while s[0] == s[1] or s[0] == s[2] or s[1] == s[2]:  # 判断随机3个邻居是否重叠
                 s = [random.randint(0, self.partern - 1) for k in range(3)]
             crossrate = [random.random() for k in range(self.popSize)]
-            index = [random.randint(0, self.popSize-1) for i in range(self.sonSize)]  # 必定变异位置
-            t = popSon[self.distanceIndex[:, s[0]], :] + self.F * (popSon[self.distanceIndex[:, s[1]], :] - popSon[self.distanceIndex[:, s[2]], :])  # 差分进化
+            index = [random.randint(0, self.popSize-1)
+                     for i in range(self.sonSize)]  # 必定变异位置
+            t = popSon[self.distanceIndex[:, s[0]], :] + self.F * \
+                (popSon[self.distanceIndex[:, s[1]], :] -
+                 popSon[self.distanceIndex[:, s[2]], :])  # 差分进化
             for j in range(self.sonSize):
                 for k in range(self.popSize):
                     if crossrate[k] > self.cr and k != index[j]:
@@ -130,17 +120,18 @@ class Moead_AAU(object):
                 is_change = False
                 if sum(t[j, 0:self.feature]) >= self.feature_low and sum(t[j, self.feature:self.popSize]) >= self.passageway_low:
                     ynow = self.fitness(t[j, :])
-                    angle = np.dot(weight, (ynow - zmin).T) / (np.linalg.norm(weight, axis=1) * np.linalg.norm((ynow - zmin + 1e-8)))
+                    angle = np.dot(weight, (ynow - zmin).T) / (np.linalg.norm(
+                        weight, axis=1) * np.linalg.norm((ynow - zmin + 1e-8)))
                     tag = [k for k in range(self.sonSize)]
                     angletest = np.c_[angle, tag]  # 将标签加上去
                     angletest = np.transpose(angletest)
-                    for k in range(self.sonSize - 1):  
+                    for k in range(self.sonSize - 1):
                         for l in range(self.sonSize - j - 1):
                             if angletest[0, l] < angletest[0, l + 1]:
                                 angletest[0, l], angletest[0, l +
-                                                        1] = angletest[0, l + 1], angletest[0, l]
+                                                           1] = angletest[0, l + 1], angletest[0, l]
                                 angletest[1, l], angletest[1, l +
-                                                        1] = angletest[1, l + 1], angletest[1, l]
+                                                           1] = angletest[1, l + 1], angletest[1, l]
                     angleIndex = angletest[1, 0:G]
                     for l in range(G):
                         if np.dot(weight[int(angleIndex[l]), :], ((ynow - zmin)/normailzation).T) < np.dot(
@@ -149,51 +140,42 @@ class Moead_AAU(object):
                             popSon[int(angleIndex[l]), :] = t[j, :]
                             y[int(angleIndex[l]), :] = ynow
                 if is_change:
-                    need_out_save = np.hstack((t[j,:],ynow)).reshape(1,-1)
-                    out_save = np.append(out_save,need_out_save,axis=0)
-            out_sort_number = self.sort_deal(out_save[:,-4:])
-            out_save_first = np.hstack((out_save,out_sort_number))
+                    need_out_save = np.hstack((t[j, :], ynow)).reshape(1, -1)
+                    out_save = np.append(out_save, need_out_save, axis=0)
+            out_sort_number = self.sort_deal(out_save[:, -4:])
+            out_save_first = np.hstack((out_save, out_sort_number))
             out_save_second = out_save_first[np.lexsort(out_save_first.T)]
-            out_save = out_save_second[:self.sonSize,:-1]
-            zmin = out_save[:,-4:].min(0)
-            # ynow_min = out_save[:,-4:-1].min(0)
-            # if ynow_min[0] < zmin[0]:  # 更新最小值
-            #     zmin[0] = ynow_min[0]
-            # if ynow_min[1] < zmin[1]:
-            #     zmin[1] = ynow_min[1]
-            # if ynow_min[2] < zmin[2]:
-            #     zmin[2] = ynow_min[2]
-            # if ynow_min[3] < zmin[3]:
-            #     zmin[3] = ynow_min[3]
+            out_save = out_save_second[:self.sonSize, :-1]
+            zmin = out_save[:, -4:].min(0)
 
-        with open('result/result_moeadau'+str(self.feature_low)+'_'+str(self.passageway_low)+'_'+str(self.time_data)+'.txt', 'w') as f:
+        with open('result/result_moeadau'+str(self.feature_low)+'_'+str(self.passageway_low)+'.txt', 'w') as f:
+            out_save_feature_channal = out_save[:, :-4]
             for i in range(self.sonSize):
                 f.write('特征数:'+str(out_save[i, -4])+' 通道数:'+str(out_save[i, -3]) +
                         ' 准确率:'+str(1-out_save[i, -2])+' 准确率标准差:'+str(out_save[i, -1]))
                 f.write('\n')
-                f.write(str(out_save[i, :-4]))
+                f.write(str(out_save_feature_channal[i, :]))
                 f.write('\n')
-        self.ploturf(out_save[:,-4:])
-        with open('answer/result_moead'+str(self.feature_low)+'_'+str(self.passageway_low)+'_'+str(self.time_data)+'.txt', 'w') as f:
-            for i in range(self.sonSize):
-                f.write(str(out_save[i,-4:]))
-                f.write('\n')
-    
-    def sort_deal(self,y):
+        self.ploturf(out_save[:, -4:])
+
+    def sort_deal(self, y):
         m = y.shape[0]
         y_normal = (y-y.min(0))/(y.max(0)-y.min(0))+0.001
-        y_normal_GMR = y_normal[:,0]*y_normal[:,1]*y_normal[:,2]*y_normal[:,3]
-        all_sort_normal_GMR = np.zeros((m,1))
-        distance = np.zeros((m,1))
+        y_normal_GMR = y_normal[:, 0]*y_normal[:, 1] * \
+            y_normal[:, 2]*y_normal[:, 3]
+        all_sort_normal_GMR = np.zeros((m, 1))
+        distance = np.zeros((m, 1))
         for i in range(m):
-            all_min_normal = (y_normal_GMR[i]>y_normal_GMR).astype('int')
-            all_sort_normal_GMR[i] = np.sum(all_min_normal*(y_normal_GMR[i]-y_normal_GMR))
-            distance[i] = np.sum(np.linalg.norm((y_normal - np.tile(y_normal[i, :], (m, 1))), axis=1))
+            all_min_normal = (y_normal_GMR[i] > y_normal_GMR).astype('int')
+            all_sort_normal_GMR[i] = np.sum(
+                all_min_normal*(y_normal_GMR[i]-y_normal_GMR))
+            distance[i] = np.sum(np.linalg.norm(
+                (y_normal - np.tile(y_normal[i, :], (m, 1))), axis=1))
         all_remain_sort = all_sort_normal_GMR/distance
         all_remain_sort_number = np.argsort(all_remain_sort.reshape(m))
-        all_sort_return = np.zeros([m,1])
+        all_sort_return = np.zeros([m, 1])
         for i in range(m):
-            all_sort_return[all_remain_sort_number[i],0] = i + 1
+            all_sort_return[all_remain_sort_number[i], 0] = i + 1
         return all_sort_return
 
     def ploturf(self, y):
@@ -234,7 +216,8 @@ class Moead_AAU(object):
         ax.set_ylabel('channal')
         ax.set_zlabel('accuracy')
         plt.show()
-        plt.savefig('result/moead_au'+str(self.feature_low)+'_' + str(self.passageway_low)+'_'+str(self.time_data)+'.pdf', dpi=600)
+        plt.savefig('result/moead_au'+str(self.feature_low) +
+                    '_' + str(self.passageway_low)+'.png', dpi=500)
 
     def fitness(self, popSon):  # 计算适应度，返回的分别是特征数、通道数、准确率、方差
         y = []
@@ -269,13 +252,17 @@ class Moead_AAU(object):
         std = math.sqrt(sum(sum((accNumb - avg) ** 2))/5)
         return avg, std
 
-def bx_run(time_data):
-    print(time.ctime())
-    model = Moead_AAU()
-    model.main(time_data)
+    def main(self):
+        self.getpartern()  # 生成权重向量
+        popSon = self.getson()
+        y, zmin = self.calculatorZ(popSon)
+        print('begin train')
+        print(time.ctime())
+        self.geneticmoead(y, zmin, popSon)
+        print(time.ctime())
+
 
 if __name__ == '__main__':
-    pool = mp.Pool(processes=5)
-    purchase_loss_value = pool.map(bx_run, range(5))
-    pool.close()
-    pool.join()
+    print(time.ctime())
+    model = Moead_AAU_GMR()
+    model.main()

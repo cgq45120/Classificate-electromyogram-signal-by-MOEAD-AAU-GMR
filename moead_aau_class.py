@@ -1,4 +1,4 @@
-from dealxh1024gj import *
+from deal_feature import *
 import numpy as np
 import random
 import time
@@ -150,9 +150,6 @@ class Moead_AAU(object):
                 f.write('\n')
                 f.write(str(popSon[i, :]))
                 f.write('\n')
-            # f.write(str(out_result))
-            # f.write('\n')
-            # f.write(str(out_result_numb))
         self.ploturf(y)
 
     def ploturf(self, y):
