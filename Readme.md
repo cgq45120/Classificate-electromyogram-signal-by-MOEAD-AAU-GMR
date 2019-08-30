@@ -10,7 +10,7 @@
 
 ## Model<br>
 -------------
-![Illustrations of the acute angle between solutions and corresponding weight vector](https://github.com/cgq45120/Classificate-electromyogram-signal-by-MOEAD-AAU-GMR/blob/master/picture/Illustrations-AU.png)
+![Illustrations of the acute angle between solutions and corresponding weight vector](https://github.com/cgq45120/Classificate-electromyogram-signal-by-MOEAD-AAU-GMR/blob/master/picture/Illustrations_AU.png)
 
 &emsp;Compared with MOEA/D, this algorithm changes how to choose which solution is better. solution A is the current solution and aa is the corresponding direction vector, &theta; is the acute angle between solution A and its corresponding direction vector aa, when the weighted Tchebycheff approach is used, which also is the acute angle between vector aa and vector F(x)−Z.
 
@@ -31,13 +31,11 @@
 The framework of proposed MOEA/D-AAU-GMR
 -------------
 ![Framework of MOEA/D-AAU-GMR](https://github.com/cgq45120/Classificate-electromyogram-signal-by-MOEAD-AAU-GMR/blob/master/picture/Framework-of-MOEAD-AAU-GMR.png)
-<br>
 -------------
 ![Population Replacement of MOEA/D-AAU-GMR](https://github.com/cgq45120/Classificate-electromyogram-signal-by-MOEAD-AAU-GMR/blob/master/picture/Population-Replacement-of-MOEAD-AAU-GMR.png)
-<br>
 -------------
 ![Update external archive of MOEA/D-AAU-GMR](https://github.com/cgq45120/Classificate-electromyogram-signal-by-MOEAD-AAU-GMR/blob/master/picture/Update-external-archive-of-MOEAD-AAU-GMR.png)
-<br>
+-------------
 
 ## Multi-objective modeling of electromyogram signal recognition
 
@@ -46,10 +44,9 @@ The framework of proposed MOEA/D-AAU-GMR
 
 &emsp;While minimizing numbers of channels and features, a high recognition efficiency should be guaranteed and excessively great difference in recognition accuracy between actions should be prevented
 
-
 ## part of result
 
-![Result of objectives for MOEA/D-AAU](https://github.com/cgq45120/Classificate-electromyogram-signal-by-MOEAD-AAU-GMR/blob/master/picture/result.png)
+![Result of objectives for MOEA/D-AAU](https://github.com/cgq45120/Classificate-electromyogram-signal-by-MOEAD-AAU-GMR/blob/master/picture/Result.png)
 <br>
 
 &emsp;As can be seen from the figure, the differences between the upper and lower bounds of accuracy vary with selected number of channels and number of features. Recognition using some features was likely to attain worse results. Average recognition accuracy of all experimentally obtained channel feature solutions was above 95%.
