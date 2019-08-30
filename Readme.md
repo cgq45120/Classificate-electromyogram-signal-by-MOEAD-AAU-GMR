@@ -50,4 +50,14 @@ The framework of proposed MOEA/D-AAU-GMR
 <br>
 
 &emsp;As can be seen from the figure, the differences between the upper and lower bounds of accuracy vary with selected number of channels and number of features. Recognition using some features was likely to attain worse results. Average recognition accuracy of all experimentally obtained channel feature solutions was above 95%.
-From perspective of the test results, action accuracy variances were small and basically around 0.02, indicating that information of EMG signal can be effectively extracted from selected features and channels so as to recognize each action; furthermore, recognition accuracy of each action was high, and in some circumstances, cactions had been 99.9% accurate on average.
+&emsp;From perspective of the test results, action accuracy variances were small and basically around 0.02, indicating that information of EMG signal can be effectively extracted from selected features and channels so as to recognize each action; furthermore, recognition accuracy of each action was high, and in some circumstances, cactions had been 99.9% accurate on average.
+&emsp;Analysis of all obtained channel feature solutions resulted in the following information of usage of features and channels
+
+![Distribution of feature usage rate](https://github.com/cgq45120/Classificate-electromyogram-signal-by-MOEAD-AAU-GMR/blob/master/picture/feature.png)
+<br>
+
+![Distribution of channel usage rate](https://github.com/cgq45120/Classificate-electromyogram-signal-by-MOEAD-AAU-GMR/blob/master/picture/channal.png)
+<br>
+
+&emsp;It can be found from Figs, usage rate of feature ZC (frequency of curves crossing zero, i.e., ZC, mainly reflects changing characteristics of different frequency components of sEMG signal) was 90.9%, much higher than that of any other feature, followed by usage rates of features RMS, FR, and IEMG, which were 43.4%, 52.1%, and 43.3%, respectively. The channels ranking top six in usage rate are Channels 1, 2, 8, 10, 12, and 16, respectively, with their usage rates being 67.1%, 65.7%, 68.5%, 62.2%, 57.6%, and 80.4%, respectively.
+Compared with other features, ZC represents the frequency of sEMG signal magnitude crossing zero magnitude level and reflects degree of variation of sEMG signal, an increase in ZC indicates more high-frequency components in EMG signal while a decrease in ZC indicates more low-frequency components, so ZC is mainly an indication of changing feature of each frequency component in sEMG signal. EMG signal per site varies constantly with time, and different actions need different myofiber sites, thus differentiation in high-frequency or low-frequency component between channels becomes significant, and critical information can be better acquired with a classifier from frequency components of different channels of each action so as to discriminate actions, so selection rate of ZC feature will become very high.
