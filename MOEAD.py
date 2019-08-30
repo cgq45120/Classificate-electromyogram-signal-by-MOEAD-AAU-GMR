@@ -89,7 +89,6 @@ class Moead(object):
 
     def geneticmoead(self, y, zmin, popSon):
         for i in range(self.iteration):
-            # update_time = 0
             if i % 10 == 0:
                 print(i)
             s = [0, 0, 0]
@@ -117,8 +116,6 @@ class Moead(object):
                             abs(self.weight[j, 0]*(y[j, 0]-zmin[0]))/(self.feature-self.feature_low), abs(self.weight[j, 1]*(y[j, 1]-zmin[1]))/(self.passageway-self.passageway_low), abs(self.weight[j, 2]*(y[j, 2]-zmin[2])), abs(self.weight[j, 3]*(y[j, 3]-zmin[3]))):
                         popSon[j, :] = t[j, :]
                         y[j, :] = ynow
-                        # update_time += 1
-                        # print('{}_time_{}_class_{}'.format(i,j,update_time))
             ynow_min = y.min(0)
             if ynow_min[0] < zmin[0]:  # 更新最小值
                 zmin[0] = ynow_min[0]
@@ -128,9 +125,6 @@ class Moead(object):
                 zmin[2] = ynow_min[2]
             if ynow_min[3] < zmin[3]:
                 zmin[3] = ynow_min[3]
-            # print(update_time)
-        # out_result = np.sum(popSon, axis=0)/popSon.shape[0]
-        # out_result_numb = np.unique(popSon, axis=0).shape[0]
         with open('result_moead'+str(self.feature_low)+'_'+str(self.passageway_low)+'.txt', 'w') as f:
             for i in range(self.sonSize):
                 f.write('特征数:'+str(y[i, 0])+' 通道数:'+str(y[i, 1]) +
@@ -138,9 +132,6 @@ class Moead(object):
                 f.write('\n')
                 f.write(str(popSon[i, :]))
                 f.write('\n')
-            # f.write(str(out_result))
-            # f.write('\n')
-            # f.write(str(out_result_numb))
         self.ploturf(y)
 
     def ploturf(self, y):
