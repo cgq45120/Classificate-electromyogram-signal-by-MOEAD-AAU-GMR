@@ -1,10 +1,22 @@
+<font face="Times new Roman">
 
-蚂蚁金服拥有上亿会员并且业务场景中每天都涉及大量的资金流入和流出，面对如此庞大的用户群，资金管理压力会非常大。在既保证资金流动性风险最小，又满足日常业务运转的情况下，精准地预测资金的流入流出情况变得尤为重要。通过对例如余额宝用户的申购赎回数据的把握，精准预测未来每日的资金流入流出情况。对货币基金而言，资金流入意味着申购行为，资金流出为赎回行为。命题中使用的数据主要包含四个部分，分别为用户基本信息数据user_profile_table、用户申购赎回数据user_balance_table、收益率表mfd_day_share_interest 和银行间拆借利率表mfd_bank_shibor。<br>
-题目来源于https://tianchi.aliyun.com/competition/entrance/231573/introduction?spm=5176.12281925.0.0.739c7137KbwTLG <br>
+# Multichannel optimization for electromyogram signal with complex features in decomposition-based multi-objective evolution framework with adaptive angle selection<br>
+## Introduction<br>
+&emsp; Human electrophysiological signals are direct responses to human behavioral intention, and analysis and interpretation of human electrophysiological signal enable a machine to recognize effectively subjective awareness of a person. As one type of human electrophysiological signal, surface electromyogram (sEMG) signal contains information about muscle state and human motion intent, and applying gesture action recognition technique to intelligent prosthesis is not only able to assist patients losing arms in rehabilitation trainings but also able to make them have a “phantom limb feel”, so sEMG-based hand action recognition technique has important medical application value.<br>
 
+&emsp; Current studies focus on the classification of a single objective (recognition accuracy), that is, this technique is considered as a single objective problem. In actual EMG signal application modeling, multiple factors such as recognition correctness, stability, and continuity should be taken into account together.<br>
 
-* 整个框架<br>
+&emsp; Under the MOEA/D algorithm framework, an algorithm for solving multi-objective EMG signal recognition problem was designed in this study.
+
+## Model<br>
 -------------
+
+
+
+
+
+
+
 ![structure](https://github.com/cgq45120/Tianchi-small-demo-solve-big-data-of-purchase-and-redeem-for-YuEbao/blob/master/end_code/picture/structure_of_tianchi_data.png)
 <br>
 整个框架分为三部分，分别为遗传算法部分，人员聚类部分和资金预测部分，三部分形成一个进化迭代的整体。<br>
