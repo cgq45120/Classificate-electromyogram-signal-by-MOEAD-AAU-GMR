@@ -1,4 +1,4 @@
-from deal_feature import *
+from DealFeature import *
 import numpy as np
 import random
 import time
@@ -9,7 +9,7 @@ from sklearn import svm
 from tqdm import tqdm
 
 
-class Moead_AAU_GMR(object):
+class MoeadAAUGMR(object):
     def __init__(self):
         self.partern = 15  # 相邻种群
         self.iteration = 100  # 迭代次数
@@ -25,7 +25,7 @@ class Moead_AAU_GMR(object):
         self.loaddata()
 
     def loaddata(self):
-        model_deal = dealxh()
+        model_deal = DealSign()
         self.trainDate, self.testDate = model_deal.readFile()
         self.trainRow = self.trainDate.shape[0]
         self.testRow = self.testDate.shape[0]
@@ -264,5 +264,5 @@ class Moead_AAU_GMR(object):
 
 if __name__ == '__main__':
     print(time.ctime())
-    model = Moead_AAU_GMR()
+    model = MoeadAAUGMR()
     model.main()

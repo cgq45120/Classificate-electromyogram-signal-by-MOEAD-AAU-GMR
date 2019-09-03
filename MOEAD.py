@@ -1,4 +1,4 @@
-from deal_feature import *
+from DealFeature import *
 import numpy as np
 import random
 import time
@@ -24,7 +24,7 @@ class Moead(object):
         self.loaddata()
 
     def loaddata(self):
-        model_deal = dealxh()
+        model_deal = DealSign()
         self.trainDate, self.testDate = model_deal.readFile()
         self.trainRow = self.trainDate.shape[0]
         self.testRow = self.testDate.shape[0]

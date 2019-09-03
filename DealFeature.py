@@ -1,7 +1,7 @@
 import numpy as np
 import math
 import time
-class dealxh(object):
+class DealSign(object):
     def __init__(self):
         self.feature = 14
         self.channal = 16
@@ -118,5 +118,5 @@ class dealxh(object):
         Data = np.array(Data).reshape((-1,self.feature*self.channal))
         return Data
 if __name__ == "__main__":
-    A= dealxh()
+    A= DealSign()
     A.readFile()
